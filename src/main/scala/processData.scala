@@ -1,8 +1,10 @@
-import org.apache.log4j.{Level, LogManager, Logger}
+import org.apache.log4j.{Level, LogManager}
 import org.apache.spark._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.types.{StringType, StructField, StructType}
-
+import org.apache.spark.sql.types.{StringType, StructType}
+import org.apache.spark.sql.functions.udf
+import org.apache.spark.sql.functions.{array, collect_list}
+import org.apache.spark.sql.functions._
 
 
 
@@ -21,8 +23,14 @@ object processData {
       .add("Date", StringType)
 
     val df = spark.read.option("delimiter","|").schema(schemaTyped).csv("data/NYT_ArticlesTXT/")
-    df.show()
-    print(df.count())
+    val noNullsdf = df.na.drop()
+
+
+    val dfHeadlinesGroup  = noNullsdf.groupBy("Date")
+      .agg(
+        collect_list("Headline") as "Headlines"
+      )
+    dfHeadlinesGroup.show()
 
   }
 }
