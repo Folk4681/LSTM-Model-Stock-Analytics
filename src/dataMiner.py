@@ -4,7 +4,7 @@ import os, requests, json, shutil, time, sys
 
 API_FILE = "../keys.json"  # specify your New York Times Archive and AlphaVantage API key in this file here
 DATA_STORAGE = "../data/"
-NYT_Storage = "NYT_Articles/"
+NYT_Storage = "NYT_ArticlesJSON/"
 ALPHAV_Storage = "Stock_Prices/"
 MONTHS = 12
 YEARS = [2016, 2017]
