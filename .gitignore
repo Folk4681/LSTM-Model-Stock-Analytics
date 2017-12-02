@@ -165,3 +165,4 @@ keys.json
 
 # Data sources
 data/
+src/metastore_db/
