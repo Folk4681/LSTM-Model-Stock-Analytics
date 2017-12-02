@@ -41,3 +41,6 @@ captures/
 
 # API Keys
 keys.json
+
+# Data sources
+data/

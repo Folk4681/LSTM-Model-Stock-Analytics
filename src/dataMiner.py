@@ -1,8 +1,6 @@
 from __future__ import print_function
 
-import sys, requests, json
-
-from pyspark.sql import SparkSession
+import os, requests, json, shutil, time
 
 API_FILE = "../keys.json"  # specify your New York Times Archive API key here
 DATA_STORAGE = "../data/NYT_Articles"
@@ -18,6 +16,13 @@ class NoFileException(Exception):
         super(NoFileException, self).__init__(msg)
 
 
+class APIKeyException(Exception):
+    def __init__(self, msg=None):
+        if msg is None:
+            msg = "Something's wrong with the parameters you specified. Perhaps your API key doesn't work?"
+        super(APIKeyException, self).__init__(msg)
+
+
 def getAPIKey():
     global NYT_API_KEY
     try:
@@ -27,13 +32,28 @@ def getAPIKey():
         raise e(errormsg)
 
 
+def createDataDir():
+    if os.path.exists(DATA_STORAGE):
+        shutil.rmtree(DATA_STORAGE)
+    os.makedirs(DATA_STORAGE)
 
+
+def mineData():
+    for y in YEARS:
+        for m in range(1, MONTHS+1):
+            currentURL = baseURL.format(y, m, NYT_API_KEY)
+            response = requests.get(currentURL)
+            response.raise_for_status()
+            fileName = DATA_STORAGE + "/" + str(y) + "-" + str(m) + ".json"
+            with open(fileName, mode='wb') as localfile:
+                localfile.write(response.content)
+            time.sleep(1)
 
 
 def main():
     getAPIKey()
-    print(NYT_API_KEY)
-    
+    createDataDir()
+    mineData()
 
 
 if __name__ == "__main__":
