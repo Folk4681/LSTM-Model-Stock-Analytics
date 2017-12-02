@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import os, requests, json, shutil, time, sys
 
-API_FILE = "../keys.json"  # specify your New York Times Archive API key in this file here
+API_FILE = "../keys.json"  # specify your New York Times Archive and AlphaVantage API key in this file here
 DATA_STORAGE = "../data/"
 NYT_Storage = "NYT_Articles/"
 ALPHAV_Storage = "Stock_Prices/"
