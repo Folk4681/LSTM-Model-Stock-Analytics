@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-import os, requests, json, shutil, time
+import os, requests, json, shutil, time, sys
 
 API_FILE = "../keys.json"  # specify your New York Times Archive API key here
 DATA_STORAGE = "../data/NYT_Articles"
@@ -14,6 +14,19 @@ class NoFileException(Exception):
         if msg is None:
             msg = "Error reading JSON file."
         super(NoFileException, self).__init__(msg)
+
+
+def loadingBar(total, progress):
+    barLength, status = 20, ""
+    progress = float(progress) / float(total)
+    if progress >= 1.:
+        progress, status = 1, "\r\n"
+    block = int(round(barLength * progress))
+    text = "\r[{}] {:.0f}% {}".format(
+        "#" * block + "-" * (barLength - block), round(progress * 100, 0),
+        status)
+    sys.stdout.write(text)
+    sys.stdout.flush()
 
 
 def getAPIKey():
@@ -32,6 +45,9 @@ def createDataDir():
 
 
 def mineData():
+    count = 0
+    total = len(YEARS)*MONTHS
+    print("Downloading New York Times Articles...")
     for y in YEARS:
         for m in range(1, MONTHS+1):
             currentURL = baseURL.format(y, m, NYT_API_KEY)
@@ -40,8 +56,10 @@ def mineData():
             fileName = DATA_STORAGE + "/" + str(y) + "-" + str(m) + ".json"
             with open(fileName, mode='wb') as localfile:
                 localfile.write(response.content)
-            time.sleep(1)
-
+            count = count+1
+            loadingBar(total, count)
+            time.sleep(0.5)
+    print("Done. Check your data folder.")
 
 def main():
     getAPIKey()
