@@ -16,13 +16,6 @@ class NoFileException(Exception):
         super(NoFileException, self).__init__(msg)
 
 
-class APIKeyException(Exception):
-    def __init__(self, msg=None):
-        if msg is None:
-            msg = "Something's wrong with the parameters you specified. Perhaps your API key doesn't work?"
-        super(APIKeyException, self).__init__(msg)
-
-
 def getAPIKey():
     global NYT_API_KEY
     try:
