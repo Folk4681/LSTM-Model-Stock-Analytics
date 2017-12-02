@@ -1,11 +1,12 @@
 import org.apache.log4j.{Level, LogManager, Logger}
 import org.apache.spark._
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
 
 
 
 
-object ProcessData {
+object processData {
   def main(args: Array[String]): Unit ={
     LogManager.getLogger("org").setLevel(Level.OFF)
     LogManager.getLogger("akka").setLevel(Level.OFF)
@@ -15,7 +16,13 @@ object ProcessData {
     // For implicit conversions like converting RDDs to DataFrames
     import spark.implicits._
 
-    val df = spark.read.json("data/NYT_Articles/2016-1.json")
-    df.select("response").show(1)
+    val schemaTyped = new StructType()
+      .add("Headline", StringType)
+      .add("Date", StringType)
+
+    val df = spark.read.option("delimiter","|").schema(schemaTyped).csv("data/NYT_ArticlesTXT/")
+    df.show()
+    print(df.count())
+
   }
 }
