@@ -2,8 +2,6 @@ import org.apache.log4j.{Level, LogManager}
 import org.apache.spark._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.functions.udf
-import org.apache.spark.sql.functions.{array, collect_list}
 import org.apache.spark.sql.functions._
 
 
@@ -27,8 +25,11 @@ object processData {
 
     val NYTHeadlinesGrouped  = noNullsNYT.groupBy("Date")
       .agg(
-        collect_list("Headline") as "Headlines"
+        concat_ws(" ", collect_list("Headline")) as "Headlines"
       )
+
+    NYTHeadlinesGrouped.show(false)
+    println(NYTHeadlinesGrouped.count())
 
 
     /* Processing for Stock Symbol History */
@@ -41,7 +42,8 @@ object processData {
       .add("Volume", LongType)
 
     val STOCK_HISTORY = spark.read.option("header","true").schema(schemaStock).csv("data/Stock_Prices")
-    STOCK_HISTORY.show(false)
+    //STOCK_HISTORY.show(false)
+    println(STOCK_HISTORY.count())
 
   }
 }
