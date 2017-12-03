@@ -7,7 +7,7 @@ DATA_STORAGE = "../data/"
 NYT_Storage = "NYT_ArticlesJSON/"
 ALPHAV_Storage = "Stock_Prices/"
 MONTHS = 12
-YEARS = [2016, 2017]
+YEARS = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017]
 NYT_URL = "http://api.nytimes.com/svc/archive/v1/{}/{}.json?api-key={}"
 ALPHAV_URL = "https://www.alphavantage.co/query?function={}&symbol={}&outputsize={}&datatype={}&apikey={}"
 SYMBOL = "SPX"
@@ -66,7 +66,7 @@ def mineArticles():
                 localfile.write(response.content)
             count = count+1
             loadingBar(total, count)
-            time.sleep(1)
+            time.sleep(2)
     print("Done. Check your data/{} folder.".format(NYT_Storage))
 
 

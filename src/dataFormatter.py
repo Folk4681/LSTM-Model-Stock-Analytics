@@ -33,15 +33,18 @@ def processData():
 
 def createTXTFile(data, oldFile):
 	newFile = open(newFileFolder + oldFile[:-4] + "txt", 'a')
-	for key in data['response']['docs']:
-		headline = key['headline']['main'].encode("ascii", "ignore")
-		headline = headline.replace("|","")
-		#lead_para = leadParaErrorHandling(key)
-		pub_date = key['pub_date']
-		#print(pub_date)
-		date = str(dateutil.parser.parse(pub_date).date())
-		content = (headline + "|" + date + "\n").encode("ascii", "ignore")
-		newFile.write(content)
+	try:
+		for key in data['response']['docs']:
+			headline = key['headline']['main'].encode("ascii", "ignore")
+			headline = headline.replace("|","")
+			#lead_para = leadParaErrorHandling(key)
+			pub_date = key['pub_date']
+			#print(pub_date)
+			date = str(dateutil.parser.parse(pub_date).date())
+			content = (headline + "|" + date + "\n").encode("ascii", "ignore")
+			newFile.write(content)
+	except (KeyError,TypeError):
+		pass
 	newFile.close()
 
 
